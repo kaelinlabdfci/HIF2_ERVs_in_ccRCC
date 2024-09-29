@@ -1,1 +1,1 @@
-#Code used for scATAC and scRNA-seq analysis of ccRCC tumors at ERV loci
+Code used in single-cell ATAC/RNA-seq analysis for 'HIF Regulates Multiple Translated Endogenous Retroviruses: Implications for Cancer Immunotherapy'
