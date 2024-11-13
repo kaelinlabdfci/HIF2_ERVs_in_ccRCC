@@ -1,4 +1,4 @@
-setwd("/Volumes/VJ_Data/Cell Manuscript_single cell ERV work/scRNA-seq_scTE")
+setwd(".../scRNA-seq_scTE")
 library(Seurat)
 library(SeuratDisk)
 library(dplyr)
@@ -31,7 +31,7 @@ RCC96 <- ReadH5AD("RCC96.h5ad")
 ################################################
 ################_Harmony_#######################
 ################################################
-#Remove RCC100, RCC116, RCC87
+#Remove RCC100, RCC116, RCC87 due to VHL WT
 
 combined <- merge(RCC101, y=c(RCC103, RCC104, RCC106, RCC112, RCC113, RCC114, RCC81, RCC84, RCC119, RCC120, RCC115, RCC86, RCC94, RCC96, RCC99), add.cell.ids=c("RCC101", "RCC103", "RCC104", "RCC106", "RCC112", "RCC113", "RCC114","RCC81", "RCC84", "RCC119", "RCC120", "RCC115", "RCC86", "RCC94", "RCC96", "RCC99"), project="Combined ccRCC")  
 combined$column <- NA
@@ -54,10 +54,6 @@ combined$column[grepl("RCC87",colnames(combined))] <- "RCC87"
 combined$column[grepl("RCC94",colnames(combined))] <- "RCC94"
 combined$column[grepl("RCC96",colnames(combined))] <- "RCC96"
 combined$column[grepl("RCC99",colnames(combined))] <- "RCC99"
-
-#a <- rownames(combined)
-#a <- as.data.frame(a)
-#write.csv(a, file="genes_and_ervs.csv")
 
 peak_assay = GetAssayData(combined, layer="counts")
 sce = scDblFinder(peak_assay)
@@ -135,22 +131,15 @@ FeaturePlot(combined, features = c("4444", "6078", "2334", "4784", "5875","3797"
   theme(text = element_text(size = 14, family = 'Helvetica'),axis.ticks.x=element_blank(), axis.ticks.y=element_blank(), axis.text.y=element_blank(), axis.text.x=element_blank()) +
   ylab('UMAP 2') + xlab('UMAP 1')
 
-rm(combined)
-
-setwd("/Volumes/VJ_Data/Cell Manuscript_DiffAcc")
-atac <- read.csv("Ann_Diff_ERV_ATAC_spike_in.csv")
-sum(atac$qj=="Y" & atac$change=="Down")
-sum(atac$qj=="Y" & atac$change=="Up")
-
 cancer <- subset(combined, idents="Cancer")
 immune <- subset(combined, idents="Immune")
-DoHeatmap(object = cancer, features = c("4444", "6078", "PTPRC", "CA9", "5875","3797","2256","505"), slot="scale.data", group.by="column", draw.lines=F)+ scale_fill_gradientn(colors = c("blue", "white", "red"))
-DoHeatmap(object = immune, features = c("4444", "6078", "PTPRC", "CA9", "5875","3797","2256","505"), slot="data", group.by="column", draw.lines=F)+ scale_fill_gradientn(colors = c("blue", "white", "red"))
+#DoHeatmap(object = cancer, features = c("4444", "6078", "PTPRC", "CA9", "5875","3797","2256","505"), slot="scale.data", group.by="column", draw.lines=F)+ scale_fill_gradientn(colors = c("blue", "white", "red"))
+#DoHeatmap(object = immune, features = c("4444", "6078", "PTPRC", "CA9", "5875","3797","2256","505"), slot="data", group.by="column", draw.lines=F)+ scale_fill_gradientn(colors = c("blue", "white", "red"))
 
 filtered <- subset(combined, idents=c("Cancer","Immune"))
 VlnPlot(filtered, features=c("PTPRC"), group.by="celltype", pt.size=0.03) + geom_violin(aes(fill = "gray", alpha = 0.5)) + NoLegend()
 
 
-combined <- ScaleData(combined, assay='RNA', features=rownames(combined))
-a <- rownames(combined) 
+#combined <- ScaleData(combined, assay='RNA', features=rownames(combined))
+#a <- rownames(combined) 
 
