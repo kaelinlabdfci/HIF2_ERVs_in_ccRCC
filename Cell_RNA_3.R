@@ -1,5 +1,5 @@
-#Cumulative Density Plot for RNA, by ATAC up, down, unc
-setwd("/Volumes/VJ_Data/Cell Manuscript_single cell ERV work/Final Scripts 2")
+#Plot for scRNA-seq correlated to ATAC up, down, unc | Figures 5E to G
+setwd("...")
 
 library(dplyr)
 library(tidyverse)
@@ -27,10 +27,9 @@ write.csv(rna_up, file="0725_rna_atac_up.csv")
 write.csv(rna_unchanged, file="0725_rna_atac_unc.csv")
 write.csv(rna, file="0725_rna_atac_all.csv")
 
-#XvY scatter plot
+#XvY scatter plot, Figure 5E
 rna$logrna <- rna$avg_log2FC
 atac$logatac <- atac$avg_log2FC
-
 
 combined <- merge(x = rna, y = atac, by = "ERV", all.y = TRUE)
 combined <- na.omit(combined)
@@ -71,32 +70,6 @@ ggplot(data = combined2,
                                                                        bg.color = "white", # shadow color
                                                                        bg.r = 0.1  ) + NoLegend()
 
-
-#detected <- 
 colnames(qj) <- "X"
 combined2$hif <- ifelse(combined2$ERV %in% qj$X, "Y", "N")
 
-####################################
-##########CA9 Heatmap###############
-####################################
-
-setwd("/Volumes/VJ_Data/Cell Manuscript_single cell ERV work")
-
-ca9 <- read.csv("CA9_enriched.csv")
-library(pheatmap)
-heatmap(ca9)
-rownames(ca9) <- ca9$ERV
-ca9_2 <- ca9[,-1]
-ca9_2 <- as.matrix(ca9_2)
-library(RColorBrewer)
-pheatmap(ca9_2, color = colorRampPalette(c("blue", "white", "red")))
-
-pheatmap(ca9_2,
-         cluster_rows = T,
-         cluster_cols = T,
-         color = colorRampPalette(c("blue", "white", "red"))(100),
-         angle_col = 90)
-
-legend(x = "bottomright", legend = c("low", "medium", "high"), 
-       cex = 0.8, fill=heat.colors(3))
-?pheatmap
