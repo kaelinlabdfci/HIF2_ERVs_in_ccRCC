@@ -20,7 +20,7 @@ da_peaks <- FindMarkers(
   ident.1 = "Cancer",
   ident.2 = "Immune",
   test.use = 'LR',
-  latent.vars = 'peak_region_fragments', only.pos=F, logfc.threshold=0)
+  latent.vars = 'peak_region_fragments', min.pct=0.01, only.pos=F, logfc.threshold=0)
 
 setwd(".../DiffATAC")
 da_peaks$logpadj <- -log10(da_peaks$p_val_adj)
