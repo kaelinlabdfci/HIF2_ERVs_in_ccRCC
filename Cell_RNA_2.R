@@ -2,7 +2,7 @@
 ################_scTE Diff_########################
 ######################################################
 library(presto)
-setwd("/Volumes/VJ_Data/Cell Manuscript_single cell ERV work/Final Scripts 2")
+setwd(".../...")
 de_genes <- FindMarkers(
   object = combined,
   ident.1 = "Cancer",
@@ -21,6 +21,7 @@ write.csv(de_genes, file="raw_de_genes_and_erv_07252024.csv")
 ################_Focus on ERVs + gene controls########
 ######################################################
 library(ggrepel)
+#Plot All ERVs and highlight HIF regulated ERVs. Spike is a column for CA9 and PTPRC
 de_ervs <- read.csv("raw_de_genes_and_erv_07252024.csv")
 de_ervs <- na.omit(de_ervs)
 qj <- read.csv("81_ervs.csv")
@@ -44,7 +45,6 @@ ggplot(data = de_ervs, aes(x = avg_log2FC, y = logpadj)) + geom_point(alpha = 0.
   xlim(-10,10) + geom_label_repel(data=dplyr::filter(de_ervs, imp=="Y"), aes(label=ERV,
                                                                                      box.padding = 1,
                                                                                      nudge_x = 2,
-                                                                                     
                                                                                      segment.ncp = 2,
                                                                                      segment.angle = 1)) + geom_label_repel(data=dplyr::filter(de_ervs, spike=="Y"), aes(label=ERV),
                                                                                                                             box.padding = 1,
@@ -55,7 +55,7 @@ ggplot(data = de_ervs, aes(x = avg_log2FC, y = logpadj)) + geom_point(alpha = 0.
                                                                                                                             segment.angle = 1,color = "red",     # text color
                                                                                                                             bg.color = "white", # shadow color
                                                                                                                             bg.r = 0.1 ) 
-library(dplyr)
+#Only plot the HIF regulated ERVs
 de_ervs_hif <- de_ervs %>%
   filter(hif=="Y" | spike=="Y")
 table(de_ervs_hif$hif=="Y" & de_ervs_hif$change=="Up") #This is 16
@@ -76,7 +76,6 @@ ggplot(data = de_ervs_hif, aes(x = avg_log2FC, y = logpadj)) + geom_point(alpha 
   xlim(-10,10) + geom_label_repel(data=dplyr::filter(de_ervs, imp=="Y"), aes(label=ERV,
                                                                              box.padding = 1,
                                                                              nudge_x = 2,
-                                                                             
                                                                              segment.ncp = 2,
                                                                              segment.angle = 1)) + geom_label_repel(data=dplyr::filter(de_ervs, spike=="Y"), aes(label=ERV),
                                                                                                                     box.padding = 1,
